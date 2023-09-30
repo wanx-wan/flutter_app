@@ -6,8 +6,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'UBU App',
-        theme: ThemeData(colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)),
         home: MyHomePage(title: 'UBU App'),
       );
 }

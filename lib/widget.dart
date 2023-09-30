@@ -2,6 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:ubuapp/datacourse.dart';
 
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final courses = <dynamic>[];
+
+  void _add() => setState(() => courses.add(randomCourse()));
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      title: Text(widget.title),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.login_outlined),
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AnimateLoginPage())),
+        ),
+      ],
+    ),
+    body: Center(
+      child: ListView.builder(
+        itemCount: courses.length,
+        itemBuilder: (BuildContext context, int index) => CourseCard(course: courses[index]),
+      ),
+    ),
+    floatingActionButton: Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        FloatingActionButton(onPressed: _add, child: const Icon(Icons.add)),
+        IconButton(icon: Icon(Icons.input), onPressed: loaddata),
+      ],
+    ),
+  );
+}
+
 class AnimateLoginPage extends StatelessWidget {
   final _formLogin = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -43,44 +84,3 @@ class AnimateLoginPage extends StatelessWidget {
   );
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final courses = <dynamic>[];
-
-  void _incrementCounter() => setState(() => courses.add(randomCourse()));
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      title: Text(widget.title),
-      leading: IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.login_outlined),
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AnimateLoginPage())),
-        ),
-      ],
-    ),
-    body: Center(
-      child: ListView.builder(
-        itemCount: courses.length,
-        itemBuilder: (BuildContext context, int index) => CourseCard(course: courses[index]),
-      ),
-    ),
-    floatingActionButton: Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        FloatingActionButton(onPressed: _incrementCounter, child: const Icon(Icons.add)),
-        IconButton(icon: Icon(Icons.input), onPressed: loaddata),
-      ],
-    ),
-  );
-}
