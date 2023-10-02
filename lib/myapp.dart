@@ -6,6 +6,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        home: MyHomePage(title: 'UBU App'),
+        home: MyHomePage(),
       );
 }
