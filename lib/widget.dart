@@ -72,8 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: [
             IconButton(
               icon: const Icon(Icons.login_outlined),
-              onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => AnimateLoginPage())),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AnimateLoginPage())) ,
             ),
           ],
         ),
@@ -95,13 +94,11 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class AnimateLoginPage extends StatelessWidget {
-  final _formLogin = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final pb = PocketBase('http://127.0.0.1:8090');
 
   Future<void> _login(BuildContext context) async {
-    if (_formLogin.currentState?.validate() == false) return;
     final email = emailController.text, password = passwordController.text;
     if (email == "wancharoen.up.63@ubu.ac.th" && password == "adminubu1234") {
       try {
@@ -112,15 +109,12 @@ class AnimateLoginPage extends StatelessWidget {
       } catch (e) {
         print(e);
       }
-    } else {
-      print('invalid');
-    }
+    } 
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Form(
-          key: _formLogin,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
