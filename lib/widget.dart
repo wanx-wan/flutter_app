@@ -43,7 +43,7 @@ class LoginPage extends StatelessWidget {
               TextFormField(controller: emailController),
               TextFormField(controller: passwordController, obscureText: true),
               ElevatedButton(
-                  onPressed: () => _login(context), child: Text('Submit')),
+                  onPressed: () => _login(context), child: Icon(Icons.send)),
             ],
           ),
         ),
@@ -58,7 +58,7 @@ class CourseCard extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(16),
         margin: const EdgeInsets.all(4),
-        decoration: BoxDecoration(color: Colors.grey),
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -106,10 +106,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundColor: Theme.of(context).primaryColor,
           actions: [
             IconButton(
-              icon: const Icon(Icons.login_outlined),
+              icon: const Icon(Icons.login),
               onPressed: () => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (_) => LoginPage())),
             ),
