@@ -18,6 +18,7 @@ List<dynamic> randomCourse() => [
       ...COURSES[random.nextInt(COURSES.length)],
       LECTURERS[random.nextInt(LECTURERS.length)]
     ];
+
 class LoginPage extends StatelessWidget {
   final emailController = TextEditingController(),
       passwordController = TextEditingController();
@@ -25,11 +26,10 @@ class LoginPage extends StatelessWidget {
   Future<void> _login(BuildContext context) async {
     final email = emailController.text, password = passwordController.text;
 
-    if (email == emails && password == passwords ) {
+    if (email == emails && password == passwords) {
       try {
         if (await pb.admins.authWithPassword(email, password) != null) {
-          Navigator.of(context)
-              .pushReplacement(MaterialPageRoute(builder: (_) => MyHomePage()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => MyHomePage()));
         }
       } catch (e) {
         print(e);
@@ -40,9 +40,8 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextFormField(controller: emailController),
               TextFormField(controller: passwordController, obscureText: true),
@@ -60,9 +59,9 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.all(4),
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.all(4),
+        color: Theme.of(context).primaryColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -76,16 +75,14 @@ class CourseCard extends StatelessWidget {
 
 Future<void> loaddata() async {
   try {
-    await pb.admins
-        .authWithPassword(emails, passwords);
+    await pb.admins.authWithPassword(emails, passwords);
     for (int i = 0; i < 100; i++) {
-      final courseData = randomCourse();
-      final record = await pb.collection('COURSES').create(body: {
-        "courseid": courseData[0],
-        "name": courseData[1],
-        "lecturer": courseData[2]
+      final create = await pb.collection('COURSES').create(body: {
+        "courseid": randomCourse()[0],
+        "name": randomCourse()[1],
+        "lecturer": randomCourse()[2]
       });
-      print(record);
+      print(create);
     }
   } catch (e) {
     print(e);
@@ -105,12 +102,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
           actions: [
             IconButton(
               icon: const Icon(Icons.login),
-              onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => LoginPage())),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => LoginPage())),
             ),
           ],
         ),
@@ -124,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            FloatingActionButton(onPressed: _add, child: const Icon(Icons.add)),
+            FloatingActionButton(onPressed: _add, child: Icon(Icons.add)),
             IconButton(icon: Icon(Icons.input), onPressed: loaddata),
           ],
         ),
