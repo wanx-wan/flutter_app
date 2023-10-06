@@ -14,6 +14,10 @@ final random = Random();
 
 final emails = "wancharoen.up.63@ubu.ac.th", passwords = "adminubu1234";
 
+List<dynamic> randomCourse() => [
+      ...COURSES[random.nextInt(COURSES.length)],
+      LECTURERS[random.nextInt(LECTURERS.length)]
+    ];
 class LoginPage extends StatelessWidget {
   final emailController = TextEditingController(),
       passwordController = TextEditingController();
@@ -69,11 +73,6 @@ class CourseCard extends StatelessWidget {
         ),
       );
 }
-
-List<dynamic> randomCourse() => [
-      ...COURSES[random.nextInt(COURSES.length)],
-      LECTURERS[random.nextInt(LECTURERS.length)]
-    ];
 
 Future<void> loaddata() async {
   try {
