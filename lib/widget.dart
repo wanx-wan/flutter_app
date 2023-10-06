@@ -2,12 +2,53 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:pocketbase/pocketbase.dart';
 
+final pb = PocketBase('http://127.0.0.1:8090');
+
 const COURSES = [
   [1145206, 'Image Analytics'],
   [1145208, 'Deep Learning']
 ];
 const LECTURERS = ['Wayo Puyati', 'Wichit Sombat'];
+
 final random = Random();
+
+final emails = "wancharoen.up.63@ubu.ac.th", passwords = "adminubu1234";
+
+class LoginPage extends StatelessWidget {
+  final emailController = TextEditingController(),
+      passwordController = TextEditingController();
+
+  Future<void> _login(BuildContext context) async {
+    final email = emailController.text, password = passwordController.text;
+
+    if (email == emails && password == passwords ) {
+      try {
+        if (await pb.admins.authWithPassword(email, password) != null) {
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (_) => MyHomePage()));
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextFormField(controller: emailController),
+              TextFormField(controller: passwordController, obscureText: true),
+              ElevatedButton(
+                  onPressed: () => _login(context), child: Text('Submit')),
+            ],
+          ),
+        ),
+      );
+}
 
 class CourseCard extends StatelessWidget {
   final List<dynamic> course;
@@ -35,18 +76,16 @@ List<dynamic> randomCourse() => [
     ];
 
 Future<void> loaddata() async {
-  final pb = PocketBase('http://127.0.0.1:8090');
   try {
     await pb.admins
-        .authWithPassword('wancharoen.up.63@ubu.ac.th', 'adminubu1234');
+        .authWithPassword(emails, passwords);
     for (int i = 0; i < 100; i++) {
-      final course = randomCourse();
-      final body = {
-        "courseid": course[0],
-        "name": course[1],
-        "lecturer": course[2]
-      };
-      final record = await pb.collection('COURSES').create(body: body);
+      final courseData = randomCourse();
+      final record = await pb.collection('COURSES').create(body: {
+        "courseid": courseData[0],
+        "name": courseData[1],
+        "lecturer": courseData[2]
+      });
       print(record);
     }
   } catch (e) {
@@ -55,7 +94,6 @@ Future<void> loaddata() async {
 }
 
 class MyHomePage extends StatefulWidget {
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -72,7 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: [
             IconButton(
               icon: const Icon(Icons.login_outlined),
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => AnimateLoginPage())) ,
+              onPressed: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => LoginPage())),
             ),
           ],
         ),
@@ -89,45 +128,6 @@ class _MyHomePageState extends State<MyHomePage> {
             FloatingActionButton(onPressed: _add, child: const Icon(Icons.add)),
             IconButton(icon: Icon(Icons.input), onPressed: loaddata),
           ],
-        ),
-      );
-}
-
-class AnimateLoginPage extends StatelessWidget {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final pb = PocketBase('http://127.0.0.1:8090');
-
-  Future<void> _login(BuildContext context) async {
-    final email = emailController.text, password = passwordController.text;
-    if (email == "wancharoen.up.63@ubu.ac.th" && password == "adminubu1234") {
-      try {
-        if (await pb.admins.authWithPassword(email, password) != null) {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => MyHomePage()));
-        }
-      } catch (e) {
-        print(e);
-      }
-    } 
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Form(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextFormField(controller: emailController),
-                TextFormField(
-                    controller: passwordController, obscureText: true),
-                ElevatedButton(
-                    onPressed: () => _login(context), child: Text('Submit')),
-              ],
-            ),
-          ),
         ),
       );
 }
